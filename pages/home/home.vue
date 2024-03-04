@@ -18,7 +18,7 @@
 		<view class="ad-1">
 			<image src="https://lilishop-oss.oss-cn-beijing.aliyuncs.com/1313246c16f6471e8e751355a675fbfb.gif"></image>
 		</view>
-		<view class="hot-goods">
+		<view class="hot-goods" @click="gotoHotList">
 			<image src="../../static/temp/h1.png"/>
 			<view class="title-box">
 				<text class="title">畅销商品</text>
@@ -43,7 +43,9 @@
 	const swiperList=ref([])
 	const hotGoodsList=ref([])
     const clickItem=(item)=>{
-		console.log(item)
+		uni.navigateTo({
+			url:`/pages/goods/goods?category1Id=${item.id}`
+		})
 	}
 	onMounted(async()=>{
 		await homeStore.fetchHomeData()
@@ -55,6 +57,12 @@
 	const search=()=>{
 		uni.navigateTo({
 			url:'/pages/goods/goods'
+		})
+	}
+	const gotoHotList=()=>{
+		//按销量
+		uni.navigateTo({
+			url:`/pages/goods/goods?order=1`
 		})
 	}
 </script>

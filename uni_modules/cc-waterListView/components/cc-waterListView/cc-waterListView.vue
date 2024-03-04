@@ -14,7 +14,7 @@
 				<image class="imgV" mode="aspectFill" :src="(item.thumbImg)"></image>
 				<text class="titleText"> {{item.skuName}} </text>
 
-				<text class="priceText"> {{ item.salePrice }}</text>
+				<text class="priceText"> ￥{{ item.salePrice }}</text>
 
 			</view>
 

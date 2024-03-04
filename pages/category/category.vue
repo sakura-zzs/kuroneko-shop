@@ -16,10 +16,9 @@
 		await categoryStore.fetchCategoryData()
 	})
 	const navToList=(item)=>{
-		uni.showModal({
-			title: '温馨提示',
-			content: '点击条目携带信息 = ' + JSON.stringify(item)
-			})
+		uni.navigateTo({
+			url:`/pages/goods/goods?category3Id=${item.id}`
+		})
 	}
 </script>
 
