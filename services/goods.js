@@ -15,3 +15,7 @@ export const getBrandList=async()=>{
 	const {data}=await kuronekoRequest.get({url:'/api/product/brand/findAll'})
 	return data
 }
+export const getGoodsDetail=async(id)=>{
+	const {data}=await kuronekoRequest.get({url:`/api/product/item/${id}`})
+	return data
+}

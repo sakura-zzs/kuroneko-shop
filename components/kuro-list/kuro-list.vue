@@ -1,6 +1,6 @@
 <template>
 		<view class="waterfall-list">
-				<view class="card" v-for="item in hotGoodsList" :key="item">
+				<view class="card" v-for="item in hotGoodsList" @click="handleItemClick(item)" :key="item">
 					<!-- :style="{height:imageHeight + 'px'}" -->
 					<image class="cover_img" :src="item.thumbImg"/>
 					<view class="title">
@@ -27,6 +27,7 @@
 				default:()=>[]
 			}
 		},
+		emit:['itemClick'],
 		methods: {
 			setImageHeight: function() {//图片高度
 				var _this = this;
@@ -34,9 +35,10 @@
 				query.select('.cover_img').boundingClientRect(data => {
 					_this.imageHeight = data.width * 9 / 16;
 				}).exec();
+			},
+			handleItemClick(item){
+				this.$emit('itemClick',item)
 			}
-
-
 		}
 	}
 </script>

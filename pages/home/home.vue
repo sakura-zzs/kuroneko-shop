@@ -26,7 +26,7 @@
 			</view>
 			<uni-icons type="right"></uni-icons>
 		</view>
-		<kuro-list :hotGoodsList="hotGoodsList"/>
+		<kuro-list :hotGoodsList="hotGoodsList" @itemClick="gotoGoodsDetail"/>
 	</view>
 </template>
 
@@ -63,6 +63,11 @@
 		//按销量
 		uni.navigateTo({
 			url:`/pages/goods/goods?order=1`
+		})
+	}
+	const gotoGoodsDetail=(item)=>{
+		uni.navigateTo({
+			url:`/pages/goodsDetail/goodsDetail?id=${item.id}`
 		})
 	}
 </script>

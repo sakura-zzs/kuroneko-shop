@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getGoodsList,getBrandList} from '../services/goods'
+import {getGoodsList,getBrandList,getGoodsDetail} from '../services/goods'
 export const useGoodsStore=defineStore('goodsStore',{
 	state:()=>{
 		return{
@@ -15,6 +15,10 @@ export const useGoodsStore=defineStore('goodsStore',{
 		async fetchBrandList(){
 			const res=await getBrandList()
 			this.brandList=res
+		},
+		async fetchGoodsDetail(id){
+			const res=await getGoodsDetail(id)
+			return res
 		}
 	}
 })

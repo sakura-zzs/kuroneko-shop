@@ -20,9 +20,17 @@
 			"path" : "pages/goods/goods",
 			"style" : 
 			{
-				"navigationBarTitleText" : "",
+				"navigationBarTitleText" : "商品列表",
 				"enablePullDownRefresh" : false,
 				"navigationStyle":"custom"
+			}
+		},
+		{
+			"path" : "pages/goodsDetail/goodsDetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "详情展示",
+				"enablePullDownRefresh" : false
 			}
 		}
 	],
