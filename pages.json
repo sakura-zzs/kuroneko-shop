@@ -32,6 +32,38 @@
 				"navigationBarTitleText" : "详情展示",
 				"enablePullDownRefresh" : false
 			}
+		},
+		{
+			"path" : "pages/register/register",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/login/login",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/user/user",
+			"style" : 
+			{
+				"navigationBarTitleText" : "个人中心",
+				"enablePullDownRefresh" : false
+			}
+		},
+		{
+			"path" : "pages/cart/cart",
+			"style" : 
+			{
+				"navigationBarTitleText" : "购物车",
+				"enablePullDownRefresh" : false
+			}
 		}
 	],
 	"globalStyle": {
@@ -56,6 +88,18 @@
 				"text": "分类",
 				"iconPath": "static/tab-cate.png",
 				"selectedIconPath": "static/tab-cate-current.png"
+			},
+			{
+				"pagePath": "pages/cart/cart",
+				"text": "购物车",
+				"iconPath": "static/tab-cart.png",
+				"selectedIconPath": "static/tab-cart-current.png"
+			},
+			{
+				"pagePath": "pages/user/user",
+				"text": "我的",
+				"iconPath": "static/tab-my.png",
+				"selectedIconPath": "static/tab-my-current.png"
 			}
 		]
 	}

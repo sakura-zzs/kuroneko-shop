@@ -198,12 +198,18 @@ const buttonGroup=[{
 const onClick=({index})=>{
 	if(index===0) uni.navigateBack({delta:1})
 	//检测登录态
-	//1
+	//1，点击购物车
+	uni.navigateTo({
+		url:'/pages/register/register'
+	})
 	//2
 }
 //底部导航右侧编辑
 const buttonClick=({index})=>{
 	//检测登录态
+	uni.navigateTo({
+		url:'/pages/login/login'
+	})
 	//0
 	//1
 }
