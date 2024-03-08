@@ -96,6 +96,14 @@
 				"navigationBarTitleText" : "设置",
 				"enablePullDownRefresh" : false
 			}
+		},
+		{
+			"path" : "pages/order/orderDetail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "订单详情",
+				"enablePullDownRefresh" : false
+			}
 		}
 	],
 	"globalStyle": {
