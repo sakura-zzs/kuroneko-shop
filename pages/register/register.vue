@@ -17,9 +17,9 @@
 </template>
 
 <script>
-	import {MD5} from 'crypto-js';
 
-
+import {useUserStore} from '../../stores/useUser'
+const userStore=useUserStore()
 	var clear;
 	const phoneRegular=/^(13|14|15|18|17)[0-9]{9}$/
 	//使用正向预查(?=pattern)
@@ -53,7 +53,7 @@
 		//方法
 		methods: {
 			//获取验证码
-			getCode() {
+			async getCode() {
 				if (this.readonly) {
 					uni.showToast({
 						title: '验证码已发送',
@@ -75,7 +75,7 @@
 					});
 					return;
 				}
-
+				await userStore.fetchVerifyCode(this.phone)
 				this.getCodeState();
 			},
 			//验证码按钮文字状态
@@ -94,7 +94,7 @@
 					}
 				}, 1000);
 			},
-			onSubmit() {
+			async onSubmit() {
 				if (!this.agree) {
 					uni.showToast({
 						title: '请先同意《用户协议》和《隐私协议》',
@@ -157,14 +157,26 @@
 					return;
 				}
 				let httpData = {
-					phone: this.phone,
-					code: this.code,
-					password: MD5(this.password),
+					username: this.phone,
+					password: this.password,
+					nickName:this.nickName,
+					code: this.code
 				};
-				if (this.recommendCode) {
-					httpData.recommendCode = this.recommendCode;
+				const res= await userStore.register(httpData)
+				if(res) {
+					uni.showToast({
+							title: '注册成功',
+							icon: 'success'
+						})
+					uni.navigateTo({
+						url:'/pages/login/login'
+					})
+				}else{
+					uni.showToast({
+							title: '注册失败',
+							icon: 'error'
+						})
 				}
-
 			},
 			protocolClick(agree){
 				this.agree=agree

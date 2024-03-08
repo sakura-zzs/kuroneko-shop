@@ -7,6 +7,7 @@ class KuronekoRequest{
    request(option){
     //携带token
     const token=uni.getStorageSync('token')
+	console.log(token);
     return new Promise((resolve,reject)=>{
 	  uni.showLoading({
 	  	title: '加载中'
@@ -15,7 +16,7 @@ class KuronekoRequest{
         // 如果同名属性在展开运算符后，则展开运算符不会覆盖后面的同名属性
         ...option,
         url:this.BASE_URL+option.url,
-        header:{...option.header,'AUTHORIZATION':`Bearer ${token}`},
+        header:{...option.header,token},
         success:res=>{
 			resolve(res.data)
 			uni.hideLoading()

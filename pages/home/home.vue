@@ -32,10 +32,13 @@
 
 <script setup>
 	import {useHomeStore} from '../../stores/useHome'
+	import {useUserStore}from '../../stores/useUser' 
 	import {storeToRefs} from 'pinia'
 	import {ref,onMounted}from 'vue'
 	const homeStore=useHomeStore()
 	const {homeData}=storeToRefs(homeStore)
+	const userStore=useUserStore()
+	
 	const indicatorDots=ref(true)
 	const interval=ref(2000)
 	const duration=ref(500)
@@ -48,6 +51,7 @@
 		})
 	}
 	onMounted(async()=>{
+		await userStore.checkLogin()
 		await homeStore.fetchHomeData()
 		const {categoryList,productSkuList}=homeData.value
 		swiperList.value=[...categoryList]

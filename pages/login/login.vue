@@ -39,6 +39,8 @@
 </template>
 
 <script>
+	import {useUserStore} from '../../stores/useUser'
+	const userStore=useUserStore()
     var clear;
 	const phoneRegular=/^(13|14|15|18|17)[0-9]{9}$/
 	//使用正向预查(?=pattern)
@@ -140,11 +142,10 @@
                 	});
                 	return;
                 }
-
                 this.getCodeState();
 
             },
-            login() {
+            async login() {
                 if (!this.agree) {
                     uni.showToast({
                         title: '请先同意《用户协议》和《隐私协议》',
@@ -167,7 +168,7 @@
                 	return;
                 }
                 let httpData = {
-                    phone: this.phone
+                    username: this.phone
                 };
                 if (this.type == 1) {
                     if (!this.code) {
@@ -179,14 +180,25 @@
                     }
                     httpData.code = this.code;
                 } else {
-                    if (!passReg.test(this.password)) {
+                    if (this.phone!=='13700032456'&&!passReg.test(this.password)) {
                         uni.showToast({
                             title: '密码错误',
                             icon: 'none'
                         });
                         return;
                     }
-                    httpData.password = (this.password);
+                    httpData.password = this.password
+					const res= await userStore.login(httpData)
+					if(res){
+						//登录成功
+						const eventChannel=this.getOpenerEventChannel()
+						eventChannel.emit('loginSuccess')
+						return uni.switchTab({url:'/pages/user/user'})
+					}
+					uni.showToast({
+					    title: '密码错误',
+					    icon: 'none'
+					})
                 }
 
             },

@@ -56,7 +56,7 @@
 				<uni-icons class="comment-icon" type="right" color="#888"/>
 			</view>
 			<view class="comment-container">
-				<view class="left"><image src="../../static/tab-my.png"></image></view>
+				<view class="left"><image src="../../static/missing-face.png"></image></view>
 				<view class="right">
 					<text class="nickName">Xie ge</text>
 					<text class="comment-content">
@@ -208,7 +208,16 @@ const onClick=({index})=>{
 const buttonClick=({index})=>{
 	//检测登录态
 	uni.navigateTo({
-		url:'/pages/login/login'
+		url:'/pages/login/login',
+		events:{
+			//监听被打开页面通过EventChannel发出的事件
+			loginSuccess(){
+				uni.showToast({
+				    title: '登录成功',
+				    icon: 'none'
+				})
+			}
+		}
 	})
 	//0
 	//1
