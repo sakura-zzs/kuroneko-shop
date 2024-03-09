@@ -35,19 +35,24 @@
 				<radio @click="choosePayType(2)" color="#fa436a" :checked="isWalletPay" />
 			</view>
 		</view>
-		<view class="pay-btn">确认支付</view>
+		<view class="pay-btn" @click="confirmPay">确认支付</view>
 	</view>
 </template>
 
 <script setup>
 	import {onLoad} from '@dcloudio/uni-app'
 	import {ref} from 'vue'
+	import {useOrderStore} from '../../stores/useOrder'
+	const orderStore=useOrderStore()
 	const isWxPay=ref(false)
 	const isAliPay=ref(true)
 	const isWalletPay=ref(false)
 	const count=ref(null)
+	const payType=ref(1)
+	const orderNo=ref(null)
 	onLoad((option)=>{
 		count.value=option.count
+		orderNo.value=option.orderNo
 	})
 	const choosePayType=(type)=>{
 		switch(type){
@@ -55,17 +60,33 @@
 			isWxPay.value=true
 			isAliPay.value=false
 			isWalletPay.value=false
+			payType.value=0
 			break
 			case 1://支付宝支付
 			isAliPay.value=true
 			isWxPay.value=false
 			isWalletPay.value=false
+			payType.value=1
 			break
 			case 2://钱包支付
 			isWalletPay.value=true
 			isWxPay.value=false
 			isAliPay.value=false
+			payType.value=2
 			break
+		}
+	}
+	const confirmPay=async()=>{
+		if(payType.value===0){
+			uni.navigateTo({
+				url:'/pages/pay/paySuccess'
+			})
+		}else if(payType.value===1){
+			await orderStore.sendAliPayRequest(orderNo.value)
+		}else if(payType.value===2){
+			uni.navigateTo({
+				url:'/pages/pay/paySuccess'
+			})
 		}
 	}
 </script>

@@ -7,3 +7,8 @@ export const getOrderList=({page,limit,orderStatus})=>{
 		return kuronekoRequest.get({url:`/api/order/orderInfo/auth/${page}/${limit}?orderStatus=${orderStatus}`})
 	}
 }
+
+export const payForAliPay= async (orderNo)=>{
+	const res=await kuronekoRequest.get({url:`/api/order/alipay/submitAlipay/${orderNo}`})
+	console.log(res);
+}

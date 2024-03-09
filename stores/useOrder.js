@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {getOrderList} from '../services/order'
+import {getOrderList,payForAliPay} from '../services/order'
 
 export const useOrderStore=defineStore('orderStore',{
 	state:()=>{
@@ -10,6 +10,9 @@ export const useOrderStore=defineStore('orderStore',{
 	actions:{
 		fetchOrderList(params){
 			return getOrderList(params)
+		},
+		async sendAliPayRequest(orderNo){
+			await payForAliPay(orderNo)
 		}
 	}
 })

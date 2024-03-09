@@ -32,7 +32,7 @@
 				<view class="item-line"></view>
 				<view class="item-footer">
 					<button v-if="item.orderStatus===0" class="action-btn">取消订单</button>
-					<button @click="goToPay(item.totalAmount)" v-if="item.orderStatus===0" class="action-btn pay">立即支付</button>
+					<button @click="goToPay(item.totalAmount,item.orderNo)" v-if="item.orderStatus===0" class="action-btn pay">立即支付</button>
 					<button class="action-btn" @click="goToOrderDetail(item)">详情</button>
 				</view>
 			</view>
@@ -131,9 +131,9 @@
 					}
 				})
 			},
-			goToPay(count){
+			goToPay(count,orderNo){
 				uni.navigateTo({
-					url:`/pages/pay/pay?count=${count}`
+					url:`/pages/pay/pay?count=${count}&orderNo=${orderNo}`
 				})
 			}
 		}
