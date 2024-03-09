@@ -104,6 +104,14 @@
 				"navigationBarTitleText" : "订单详情",
 				"enablePullDownRefresh" : false
 			}
+		},
+		{
+			"path" : "pages/pay/pay",
+			"style" : 
+			{
+				"navigationBarTitleText" : "支付",
+				"enablePullDownRefresh" : false
+			}
 		}
 	],
 	"globalStyle": {

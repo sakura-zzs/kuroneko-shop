@@ -73,7 +73,7 @@
 			<text class="pay-unit">￥</text>
 			<text class="pay-count">{{orderDetailData?.totalAmount}}</text>
 		</view>
-		<view class="pay-btn">
+		<view @click="goToPay(orderDetailData?.totalAmount)" class="pay-btn">
 			去支付
 		</view>
 	</view>
@@ -91,6 +91,11 @@ onMounted(()=>{
 		orderDetailData.value=orderData
 	})
 })
+const goToPay=(count)=>{
+	uni.navigateTo({
+		url:`/pages/pay/pay?count=${count}`
+	})
+}
 </script>
 
 <style lang="scss" scoped>
