@@ -122,6 +122,7 @@
 	}
 		
 	const goOrder=(index)=>{
+		// console.log(loginStatus.value,userInfo.value);
 		if(!loginStatus.value) return goLogin()
 		uni.navigateTo({
 			url:`../order/order?index=${index}`

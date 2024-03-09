@@ -1,31 +1,33 @@
 <template>
 	<view>
 		<view class="cart-list">
-			<view class="cart-item b-b">
+			<view class="cart-item b-b" v-for="(item,index) in cartList" :key="index">
 				<view class="item-image">
-					<image src="" mode="" class="item-img loaded"></image>
-					<view class="item-checkbox">
-						<image src="../../static/selected.png"></image>
+					<image :src="item.imgUrl" class="item-img loaded"></image>
+					<view class="item-checkbox" @click="choosed(item)">
+						<image v-if="item.isChecked" src="../../static/selected.png"></image>
+						<image v-else src="../../static/select.png"></image>
 					</view>
 				</view>
 				<view class="item-right">
 					<text class="tit">
-						aa
+						{{item.skuName}}
 					</text>
-					<text class="price">aa</text>
-					<uni-number-box @change="reCalculate($event,1)"></uni-number-box>
+					<text class="price">{{'￥'+item.cartPrice*item.skuNum}}</text>
+					<uni-number-box min="1" :value="item.skuNum" @change="reCalculate($event,item.skuId,item.skuNum)"></uni-number-box>
 				</view>
-				<uni-icons class="del-item" type="closeempty"></uni-icons>
+				<uni-icons @click="deleteGoods(item.skuId)" class="del-item" type="closeempty"></uni-icons>
 			</view>
 		</view>
 		<view class="action-bar">
 			<view class="checkbox">
-				<image src="../../static/selected.png"></image>
-				<view class="clear-btn show">清空</view>
+				<image v-if="!getIsSelectAllStatus" @click="isSelectAll" src="../../static/selected.png"></image>
+				<image v-else @click="isSelectAll" src="../../static/select.png"></image>
+				<view @click="clearCart" :class="{'clear-btn':true,'show':cartList.length!=0&&!getIsSelectAllStatus}">清空</view>
 			</view>
 			<view class="total-box">
 				<text class="price">
-					￥
+					{{'￥'+getTotalPrice}}
 				</text>
 				<text class="discounted">
 					已优惠
@@ -41,13 +43,78 @@
 </template>
 
 <script setup>
-	import {ref} from 'vue'
-	
-	const totalPrice=ref(null)
-	const reCalculate=(num,a)=>{
-		console.log(num,a);
+	import {ref,computed} from 'vue'
+	import {onShow,onLoad} from '@dcloudio/uni-app'
+	import {useUserStore} from '../../stores/useUser'
+	import {useCartStore} from '../../stores/useCart'
+	import {storeToRefs} from 'pinia'
+	const cartStore=useCartStore()
+	const {loginStatus}=storeToRefs(useUserStore())
+	const {cartList}=storeToRefs(cartStore)
+	const getTotalPrice=computed(()=>{
+		let sum=0
+		cartList.value.forEach(v=>{
+			if(v.isChecked==1) sum+=v.cartPrice*v.skuNum
+		})
+		return sum
+	})
+	//记录前一次变化值
+	let preV=0
+	const reCalculate=async(num,skuId,skuNum)=>{
+		//前一次值应为当前商品数（商品数有初始值）
+		preV=skuNum
+		//相同值不处理
+		if(num==preV) return
+		//不同，发起加减请求
+		const newSkuNum=num-preV
+		await cartStore.addCart({skuId,skuNum:newSkuNum})
+		//更新
+		await cartStore.fetchCartList()	
 	}
-
+	onLoad(async()=>{
+		await cartStore.fetchCartList()
+	})
+	onShow(async()=>{
+		if(!loginStatus.value) 
+		return uni.navigateTo({
+			url:'/pages/login/login'
+		})
+		await cartStore.fetchCartList()
+	})
+	const deleteGoods=async(id)=>{
+		const res=await cartStore.deleteCart(id)
+		if(res){
+			await cartStore.fetchCartList()
+			return uni.showToast({
+				title:'删除成功'
+			})
+		}
+		return uni.showToast({
+			title:'删除失败'
+		})
+	}
+	const choosed=async(goods)=>{
+		const isChecked=goods.isChecked==1?0:1
+		const skuId=goods.skuId
+		const res=await cartStore.updateCartChecked({skuId,isChecked})
+		if(res){
+			await cartStore.fetchCartList()
+		}
+	}
+	const getIsSelectAllStatus=computed(()=>cartList.value.find(goods=>goods.isChecked==0))
+	const isSelectAll=async()=>{
+		const isChecked=getIsSelectAllStatus.value?1:0
+		const res=await cartStore.updateAllCartChecked(isChecked)
+		if(res){
+			await cartStore.fetchCartList()
+		}
+	}
+	const clearCart=async()=>{
+		const res=await cartStore.clearCart()
+		if(res){
+			await cartStore.fetchCartList()
+		}
+	}
 </script>
 
 <style lang="scss" scoped>

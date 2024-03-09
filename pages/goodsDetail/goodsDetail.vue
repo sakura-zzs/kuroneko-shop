@@ -87,15 +87,21 @@
 <script setup>
 	import {onLoad} from '@dcloudio/uni-app'
 	import {useGoodsStore} from '../../stores/useGoods'
+	import {useUserStore} from '../../stores/useUser'
+	import {useCartStore} from '../../stores/useCart'
+	import {storeToRefs} from 'pinia'
 	import {ref,computed} from 'vue'
 	const goodsStore=useGoodsStore()
+	const userStore=useUserStore()
+	const cartStore=useCartStore()
+	const {loginStatus}=storeToRefs(userStore)
 	const goodsDetail=ref(null)
 	//是否展开sku商品选择器
 	const skuShow=ref(false)
 	//商品选择器默认选择skus下标
 	const selectSkuIndex=ref(0)
-	//默认选择规格
-	// const skuSpec=ref('')
+	//默认选择id
+	const skuId=ref(null)
 	//提取默认选择规格
 	const getSkuSpec=computed(()=>{
 		let skuSpec=goodsDetail.value?.productSku.skuSpec||''
@@ -110,6 +116,7 @@
 	})
 	onLoad(async(option)=>{
 		const {id}=option
+		skuId.value=id
 		if(id){
             goodsDetail.value= await goodsStore.fetchGoodsDetail(id)
 			//获取商品选择相关的所有商品数据，以合成商品选择器所需的不同规格商品的价格、库存、图片、属性
@@ -159,13 +166,28 @@ const skuChange=async(e)=>{
 	}
 }
 //计算价格
+// const skuNum=ref(1)
 const numChange=(count)=>{
-	console.log(count);
+	// skuNum.value=count
 }
 //加入购物车
-const skuConfirm=(e)=>{
-	console.log(e);
+const skuConfirm=async(e)=>{
 	//验证登录
+	if(!loginStatus.value){
+		uni.navigateTo({
+			url:'/pages/login/login'
+		})
+	}else{
+		//发起加入购物车请求
+		const res= await cartStore.addCart({skuId:e.sku.id,skuNum:e.num})
+		if(res) return uni.showToast({
+			title:'添加成功'
+		})
+		return uni.showToast({
+			title:'添加失败'
+		})
+	}
+	
 }
 //底部导航配置
 const options= [{
@@ -199,15 +221,22 @@ const onClick=({index})=>{
 	if(index===0) uni.navigateBack({delta:1})
 	//检测登录态
 	//1，点击购物车
-	uni.navigateTo({
-		url:'/pages/register/register'
-	})
-	//2
+	if(!loginStatus.value){
+		uni.navigateTo({
+			url:'/pages/login/login'
+		})
+	}else{
+		uni.switchTab({
+			url:'/pages/cart/cart'
+		})
+	}
+	//2,收藏，无接口
 }
 //底部导航右侧编辑
-const buttonClick=({index})=>{
+const buttonClick=async({index})=>{
 	//检测登录态
-	uni.navigateTo({
+	if(!loginStatus.value)
+	return uni.navigateTo({
 		url:'/pages/login/login',
 		events:{
 			//监听被打开页面通过EventChannel发出的事件
@@ -219,8 +248,17 @@ const buttonClick=({index})=>{
 			}
 		}
 	})
-	//0
-	//1
+	//0,加入购物车
+	if(index==0){
+		const res= await cartStore.addCart({skuId:skuId.value,skuNum:1})
+		if(res) return uni.showToast({
+			title:'添加成功'
+		})
+		return uni.showToast({
+			title:'添加失败'
+		})
+	}
+	//1,立即购买，跳转到创建订单页面
 }
 </script>
 
